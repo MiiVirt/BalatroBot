@@ -1,25 +1,25 @@
 
-def cards():
-    card_dict = {
-        "two" : 2,
-        "three" : 3,
-        "four" : 4,
-        "five" : 5,
-        "six" : 6,
-        "seven" : 7,
-        "eight" : 8,
-        "nine" : 9,
-        "ten" : 10,
-        "jack" : 10,
-        "queen" : 10,
-        "king" : 10,
-        "ace" : 11
-    }
-    #card_dict.update({"ace" : 1})
-    #print(card_dict["ace"])
-    return card_dict
+class Card:
+    def __init__(self, name, value, type):
+        self.name = name
+        self.value = value
+        self.type = type
 
-def poker_hands():
+card1 = Card("ace", 11, 1)
+card2 = Card("two", 2, 2)
+card3 = Card("three", 3, 3)
+card4 = Card("four", 4, 4)
+card5 = Card("five", 5, 5)
+card6 = Card("six", 6, 6)
+card7 = Card("seven", 7, 7)
+card8 = Card("eight", 8, 8)
+card9 = Card("nine", 9, 9)
+card10 = Card("ten", 10, 10)
+card11 = Card("jack", 10, 11)
+card12 = Card("queen", 10, 12)
+card13 = Card("king", 10, 13)
+
+def hand_values():
     # base chip amount, base mult, + chips, + mult
     high_card = [5, 1, 0, 0]
     pair = [10, 2, 0, 0]
@@ -55,7 +55,8 @@ def hand():
     if suit1 == suit2 and suit2 == suit3 and suit3 == suit4 and suit4 == suit5:
         print("flush!")
 
-    for i
+    for i in suits:
+        
 def card_type(card):
     rank = card[0]
     suit = card[1]
