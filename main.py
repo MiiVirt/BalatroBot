@@ -8,7 +8,6 @@ class Card:
     def __str__(self):
         return f"{self.name}{self.value}{self.type}"
 
-
 c1 = Card("ace", 11, 1, "a")
 c2 = Card("two", 2, 2, "2")
 c3 = Card("three", 3, 3, "3")
@@ -40,14 +39,59 @@ def hand_values():
     flush_five = [160, 16, 0, 0]
 
 def hand(ranks, suits):
+    #high_card = False
+    pair = False
+    three_kind = False
+    four_kind = False
+    five_kind = False
+    flush_five = False
+    flush = False
+    straight = False
+    full_house = False
+    flush_house = False
+    straight_flush = False
+
+    type_list = []
+    for i in ranks:
+        for c in cards:
+            if c.short == i:
+                type_list.append(c.type)
+    type_list.sort()
+
+    #Flush
     if suits[0] == suits[1] and suits[1] == suits[2] and suits[2] == suits[3] and suits[3] == suits[4]:
         print("flush!")
-
+        flush = True
+    #Straight
+    if type_list == list(range(type_list[0], type_list[0] + len(type_list))):
+        straight = True
+        print("Straight!")
+    elif type_list[0] == 1:
+        type_list[0] = 14
+        type_list.sort()
+        if type_list == list(range(type_list[0], type_list[0] + len(type_list))):
+            straight = True
+            print("Straight")
+        #Straigth Flush
+        if flush == True and straight == True:
+            straight_flush = True
+            print("Straight flush!")
+    #2-3-4-5 of a kind
+    for i in type_list:
+        print(type_list.count(i))
 
 def card_type(card):
-    rank = card[0]
-    suit = card[1]
-    # check if correct values
+    if len(card) > 3:
+        print("Too long card")
+
+    elif len(card) == 3:
+        rank = card[:2]
+        suit = card[2]
+
+    else:
+        rank = card[0]
+        suit = card[1]
+
     return rank, suit
 
 def main():
@@ -70,12 +114,12 @@ def main():
     suits = [suit1, suit2, suit3, suit4, suit5]
     hand(ranks, suits)
 
-    for i in ranks:
-        for c in cards:
-            if c.short == i:
-                print(c.name)
-
-
+    """
+        for i in ranks:
+            for c in cards:
+                if c.short == i:
+                    print(c.name)
+    """
 
 if __name__ == '__main__':
     main()
