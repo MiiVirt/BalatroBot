@@ -24,7 +24,7 @@ c13 = Card("king", 10, 13, "k")
 
 cards = [c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13]
 
-def hand_values():
+def hand_values(hand, cips, mult):
     # base chip amount, base mult, + chips, + mult
     high_card = [5, 1, 0, 0]
     pair = [10, 2, 0, 0]
@@ -38,9 +38,14 @@ def hand_values():
     flush_house = [140, 14, 0, 0]
     flush_five = [160, 16, 0, 0]
 
+   # values = [high_card, pair, two_pair, three_kind, straight, flush, four_kind, straight_flush, five_kind, flush_house, flush_five]
+
+    return
+
 def hand(ranks, suits):
     #high_card = False
     pair = False
+    twopair = False
     three_kind = False
     four_kind = False
     five_kind = False
@@ -51,12 +56,46 @@ def hand(ranks, suits):
     flush_house = False
     straight_flush = False
 
+    pairs = []
+    pair_count = 0
+
     type_list = []
     for i in ranks:
         for c in cards:
             if c.short == i:
                 type_list.append(c.type)
     type_list.sort()
+
+    #2-3-4-5 of a kind
+    for i in type_list:
+        if type_list.count(i) == 5:
+            five_kind = True
+            print("Five of a kind!")
+            break
+        elif type_list.count(i) == 4:
+            four_kind = True
+            print("Four of a kind!")
+            break
+        elif type_list.count(i) == 3 and three_kind == False:
+            three_kind = True
+            three_type = i
+            print("Three of a kind!")
+        elif type_list.count(i) == 2:
+            pair = True
+            if i not in pairs:
+                pair_count += 1
+                pairs.append(i)
+                print("a Pair!")
+
+    #2 pairs
+    if len(pairs) > 1:
+        print("Two pairs!")
+        twopair = True
+
+    #Full house
+    if pair == True and three_kind == True:
+        print("Full house!")
+        full_house == True
 
     #Flush
     if suits[0] == suits[1] and suits[1] == suits[2] and suits[2] == suits[3] and suits[3] == suits[4]:
@@ -69,16 +108,25 @@ def hand(ranks, suits):
     elif type_list[0] == 1:
         type_list[0] = 14
         type_list.sort()
+        print(type_list)
         if type_list == list(range(type_list[0], type_list[0] + len(type_list))):
             straight = True
             print("Straight")
-        #Straigth Flush
-        if flush == True and straight == True:
-            straight_flush = True
-            print("Straight flush!")
-    #2-3-4-5 of a kind
-    for i in type_list:
-        print(type_list.count(i))
+        type_list[-1] = 1
+        type_list.sort()
+
+    #Straigth Flush
+    if flush == True and straight == True:
+        straight_flush = True
+        print("Straight flush!")
+
+    #Flush house
+    if flush == True and full_house == True:
+        flush_house == True
+
+    #Flush five
+    if flush == True and five_kind == True:
+        flush_five == True
 
 def card_type(card):
     if len(card) > 3:
@@ -113,13 +161,6 @@ def main():
     ranks = [rank1, rank2, rank3, rank4, rank5]
     suits = [suit1, suit2, suit3, suit4, suit5]
     hand(ranks, suits)
-
-    """
-        for i in ranks:
-            for c in cards:
-                if c.short == i:
-                    print(c.name)
-    """
 
 if __name__ == '__main__':
     main()
