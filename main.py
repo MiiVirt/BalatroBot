@@ -24,7 +24,12 @@ c13 = Card("king", 10, 13, "k")
 
 cards = [c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13]
 
-def hand_values(hand, cips, mult):
+def hand_values(hand, card_values):
+
+    score = 0
+    card_score = sum(card_values)
+    #print(card_score)
+
     # base chip amount, base mult, + chips, + mult
     high_card = [5, 1, 0, 0]
     pair = [10, 2, 0, 0]
@@ -32,20 +37,48 @@ def hand_values(hand, cips, mult):
     three_kind = [30, 3, 0, 0]
     straight = [30, 4, 0, 0]
     flush = [35, 4, 0, 0]
+    full_house = [40, 4, 0, 0]
     four_kind = [60, 7, 0, 0]
     straight_flush = [100, 8, 0, 0]
     five_kind = [120, 12, 0, 0]
     flush_house = [140, 14, 0, 0]
     flush_five = [160, 16, 0, 0]
 
-   # values = [high_card, pair, two_pair, three_kind, straight, flush, four_kind, straight_flush, five_kind, flush_house, flush_five]
+    hands = {"high_card": high_card,
+             "pair": pair,
+             "two_pair": two_pair,
+             "three_kind": three_kind,
+             "straight": straight,
+             "flush": flush,
+             "full_house": full_house,
+             "four_kind": four_kind,
+             "straight_flush": straight_flush,
+             "five_kind": five_kind,
+             "flush_house": flush_house,
+             "flush_five": flush_five}
 
-    return
+    for i in hands:
+        if i == hand:
+            chips = hands.get(i)[0] + hands.get(i)[2]
+            mult = hands.get(i)[1] + hands.get(i)[3]
+            #print("Chips: ", chips,", Mult: ", mult)
+            score = (chips+ card_score) * mult
+    print("Score: ", score)
+    return score
+
+def score_evaluator(score1, score2):
+
+    if score1 > score2:
+        return score1
+    elif score2 > score1:
+        return score2
+    else:
+        print("Both scores are equal!")
 
 def hand(ranks, suits):
     #high_card = False
     pair = False
-    twopair = False
+    two_pair = False
     three_kind = False
     four_kind = False
     five_kind = False
@@ -58,75 +91,93 @@ def hand(ranks, suits):
 
     pairs = []
     pair_count = 0
+    score = 0
 
     type_list = []
+    value_list = []
     for i in ranks:
         for c in cards:
             if c.short == i:
                 type_list.append(c.type)
+                value_list.append(c.value)
     type_list.sort()
 
     #2-3-4-5 of a kind
     for i in type_list:
         if type_list.count(i) == 5:
-            five_kind = True
             print("Five of a kind!")
+            five_kind = True
+            hand_values("five_kind", value_list)
             break
         elif type_list.count(i) == 4:
-            four_kind = True
             print("Four of a kind!")
+            four_kind = True
+            hand_values("four_kind", value_list)
             break
         elif type_list.count(i) == 3 and three_kind == False:
-            three_kind = True
-            three_type = i
             print("Three of a kind!")
+            three_kind = True
+            hand_values("three_kind", value_list)
+            three_type = i
         elif type_list.count(i) == 2:
+            print("a Pair!")
             pair = True
+            hand_values("pair", value_list)
             if i not in pairs:
                 pair_count += 1
                 pairs.append(i)
-                print("a Pair!")
 
     #2 pairs
     if len(pairs) > 1:
         print("Two pairs!")
-        twopair = True
+        two_pair = True
+        hand_values("two_pair", value_list)
 
     #Full house
     if pair == True and three_kind == True:
         print("Full house!")
         full_house == True
+        hand_values("full_house", value_list)
 
     #Flush
     if suits[0] == suits[1] and suits[1] == suits[2] and suits[2] == suits[3] and suits[3] == suits[4]:
         print("flush!")
         flush = True
+        hand_values("flush", value_list)
+
     #Straight
     if type_list == list(range(type_list[0], type_list[0] + len(type_list))):
-        straight = True
         print("Straight!")
+        straight = True
+        hand_values("straight", value_list)
     elif type_list[0] == 1:
         type_list[0] = 14
         type_list.sort()
-        print(type_list)
+        #print(type_list)
         if type_list == list(range(type_list[0], type_list[0] + len(type_list))):
-            straight = True
             print("Straight")
+            straight = True
+            hand_values("straight", value_list)
         type_list[-1] = 1
         type_list.sort()
 
     #Straigth Flush
     if flush == True and straight == True:
-        straight_flush = True
         print("Straight flush!")
+        straight_flush = True
+        hand_values("straight_flush", value_list)
 
     #Flush house
     if flush == True and full_house == True:
+        print("Flush house!")
         flush_house == True
+        hand_values("flush_house", value_list)
 
     #Flush five
     if flush == True and five_kind == True:
+        print("Flush five!")
         flush_five == True
+        hand_values("flush_five", value_list)
 
 def card_type(card):
     if len(card) > 3:
@@ -142,24 +193,25 @@ def card_type(card):
 
     return rank, suit
 
+def get_card(count):
+
+    card_ranks = []
+    card_suits = []
+    while count > 0:
+        card = input("Card: ").lower()
+        rank, suit = card_type(card)
+        card_ranks.append(rank)
+        card_suits.append(suit)
+        count -= 1
+    return card_ranks, card_suits
 def main():
     print("2-10, jack = j, queen = q, king = k, ace = a")
     print("Hearts = h, diamonds = d, clubs = c, spades = s")
     print("example answer: qh = queen of hearts, 5d = five of diamonds ")
     print("xx = no card")
-    card1 = input("Card 1: ").lower()
-    rank1, suit1 = card_type(card1)
-    card2 = input("Card 2: ").lower()
-    rank2, suit2 = card_type(card2)
-    card3 = input("Card 3: ").lower()
-    rank3, suit3 = card_type(card3)
-    card4 = input("Card 4: ").lower()
-    rank4, suit4 = card_type(card4)
-    card5 = input("Card 5: ").lower()
-    rank5, suit5 = card_type(card5)
+    count = int(input("How many cards would you like to add? "))
 
-    ranks = [rank1, rank2, rank3, rank4, rank5]
-    suits = [suit1, suit2, suit3, suit4, suit5]
+    ranks, suits = get_card(count)
     hand(ranks, suits)
 
 if __name__ == '__main__':
