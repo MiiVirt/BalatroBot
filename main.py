@@ -1,6 +1,8 @@
 from itertools import combinations
+import random
 
 scores = []
+dealt_cards = []
 class Card:
     def __init__(self, name, value, type, short):
         self.name = name
@@ -25,6 +27,29 @@ c12 = Card("queen", 10, 12, "q")
 c13 = Card("king", 10, 13, "k")
 
 cards = [c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13]
+
+def deal_cards(dealt_cards):
+
+    hearts = ["ah", "2h", "3h", "4h", "5h", "6h", "7h", "8h", "9h", "10h", "jh", "qh", "kh"]
+    diamonds = ["ad", "2d", "3d", "4d", "5d", "6d", "7d", "8d", "9d", "10d", "jd", "qd", "kd"]
+    clubs = ["ac", "2c", "3c", "4c", "5c", "6c", "7c", "8c", "9c", "10c", "jc", "qc", "kc"]
+    spades = ["as", "2s", "3s", "4s", "5s", "6s", "7s", "8s", "9s", "10s", "js", "qs", "ks"]
+
+    deck = hearts + diamonds + clubs + spades
+
+    dealt_hand = []
+
+    hand_size = 8
+
+    while hand_size > 0:
+        i = random.randint(0, 51)
+        if deck[i] not in dealt_cards and deck[i] not in dealt_hand:
+            dealt_hand.append(deck[i])
+            hand_size -= 1
+    for x in dealt_hand:
+        dealt_cards.append(x)
+    print(dealt_hand)
+    return dealt_hand, dealt_cards
 
 def hand_values(hand, card_values):
 
@@ -224,10 +249,10 @@ def main():
     #    rank, suit = card_type(i)
     #    card_rank.append(rank)
     #   card_suit.append(suit)
-
-
     #score_evaluator(ranks, suits)
     #hand(ranks, suits)
 
 if __name__ == '__main__':
-    main()
+    #main()
+    deal_cards(dealt_cards)
+    
