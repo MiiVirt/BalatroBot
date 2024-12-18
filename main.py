@@ -84,21 +84,29 @@ def hand_values(hand, card_values):
              "flush_house": flush_house,
              "flush_five": flush_five}
 
+    if hand == "high_card":
+        chips = hands.get("high_card")[0] + hands.get("high_card")[2]
+        mult = hands.get("high_card")[1] + hands. get("high_card")[3]
+        high_card_value = card_values[-1]
+        score = (chips + high_card_value) * mult
+        print("Score:", score)
+        return score
+
     for i in hands:
-        if i == hand:
+        if i == hand and hand != "high_card":
             chips = hands.get(i)[0] + hands.get(i)[2]
             mult = hands.get(i)[1] + hands.get(i)[3]
             #print("Chips: ", chips,", Mult: ", mult)
             score = (chips+ card_score) * mult
-    print("Score: ", score)
+    print("Score:", score)
     return score
 
-def score_evaluator(scores):
+def score_evaluator(score):
+
 
     return
 
 def hand(ranks, suits):
-    #high_card = False
     pair = False
     two_pair = False
     three_kind = False
@@ -122,6 +130,22 @@ def hand(ranks, suits):
                 type_list.append(c.type)
                 value_list.append(c.value)
     type_list.sort()
+    value_list.sort()
+    print(type_list)
+    print(value_list)
+
+    #High card
+    if type_list[0] == 1:
+        high_type = type_list[0]
+    else:
+        high_type = type_list[-1]
+
+    for i in type_list:
+        for c in cards:
+            if c.type == high_type:
+                high_card = c.name
+                scores.append(hand_values("high_card", value_list))
+    print("High card:", high_card)
 
     #2-3-4-5 of a kind
     for i in type_list:
@@ -253,6 +277,6 @@ def main():
     #hand(ranks, suits)
 
 if __name__ == '__main__':
-    #main()
-    deal_cards(dealt_cards)
+    main()
+    #deal_cards(dealt_cards)
     
